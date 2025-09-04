@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { afterUpdate, createEventDispatcher } from "svelte";
+	import { afterUpdate, createEventDispatcher, tick } from "svelte";
 	import { _ } from "svelte-i18n";
 	import { BlockTitle } from "@gradio/atoms";
 	import { Remove, DropdownArrow } from "@gradio/icons";
@@ -39,6 +39,10 @@
 	let selected_indices: (number | string)[] = [];
 	let old_selected_index: (number | string)[] = [];
 
+	let show_tooltip = false;
+    let tooltip_element: HTMLSpanElement; 
+    let icon_element: HTMLSpanElement; 
+	
 	const dispatch = createEventDispatcher<{
 		change: string | string[] | undefined;
 		input: undefined;
@@ -93,6 +97,32 @@
 			old_selected_index = selected_indices.slice();
 		}
 	}
+
+	function position_tooltip() {
+        if (!tooltip_element || !icon_element) return;
+        
+        const icon_rect = icon_element.getBoundingClientRect();        
+        tooltip_element.style.position = 'fixed';        
+        tooltip_element.style.left = `${icon_rect.right + 8}px`; 
+        tooltip_element.style.top = `${icon_rect.top}px`;
+    }
+
+	function portal(node: HTMLElement) {
+        document.body.appendChild(node);
+
+        return {
+            destroy() {
+                if (node.parentNode) {
+                    node.parentNode.removeChild(node);
+                }
+            }
+        };
+    }
+        
+    function handle_show_tooltip() {
+        show_tooltip = true;    
+        tick().then(position_tooltip);
+    }
 
 	function handle_blur(): void {
 		if (!allow_custom_value) {
@@ -225,10 +255,22 @@
         <div class="title-line">            
             <BlockTitle {show_label} info={undefined}>{label}</BlockTitle>                        
             {#if help && show_label}
-                <div class="tooltip-container">
-                    <span class="tooltip-icon">?</span>
-                    <span class="tooltip-text">{help}</span>
-                </div>
+				<div class="tooltip-container"
+					role="button"
+					tabindex="0"
+					aria-label="Help"
+					on:mouseenter={handle_show_tooltip}
+					on:mouseleave={() => show_tooltip = false}
+					on:focusin={handle_show_tooltip}
+					on:focusout={() => show_tooltip = false}
+				>
+					<span class="tooltip-icon" bind:this={icon_element}>?</span>
+					{#if show_tooltip}
+                        <span class="tooltip-text" bind:this={tooltip_element} use:portal>
+                            {help}
+                        </span>
+                    {/if}
+				</div>
             {/if}
         </div>
         {#if info && show_label}
@@ -449,8 +491,6 @@
     .tooltip-container {
         position: relative;
         display: inline-flex;
-        align-items: center;
-        justify-content: center;
     }
 	.tooltip-icon {
         display: flex;
@@ -466,25 +506,21 @@
         cursor: help;
         user-select: none;
     }
-     .tooltip-text {
-		visibility: hidden;
+     .tooltip-text {		
 		width: 300px;
 		background-color: var(--body-text-color);
 		color: var(--background-fill-primary);
 		text-align: center;
 		border-radius: var(--radius-md);
-		padding: var(--spacing-md);		
-		position: absolute;
-		z-index: 50;
-		top: 0;
-		left: 100%;
-		margin-left: var(--spacing-sm);
-		transform: translateY(-30%); 
-		opacity: 0;
-		transition: opacity 0.3s;
-		pointer-events: none;
-	}
-    .tooltip-container:hover .tooltip-text {
+		padding: var(--spacing-md);				
+		z-index: var(--layer-top);		
+		opacity: 1;
+		transition: opacity 0.2s;
+		pointer-events: none;				
+		font-weight: var(--body-text-weight);
+    	font-size: var(--body-text-size);
+	} 
+	.tooltip-container:hover .tooltip-text {
         visibility: visible;
         opacity: 1.0;
     }

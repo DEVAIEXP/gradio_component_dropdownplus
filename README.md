@@ -9,10 +9,14 @@ pinned: false
 app_file: space.py
 ---
 
-# `gradio_dropdownplus`
-<img alt="Static Badge" src="https://img.shields.io/badge/version%20-%200.0.5%20-%20blue"> <a href="https://huggingface.co/spaces/elismasilva/gradio_dropdownplus"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Demo-blue"></a><p><span>💻 <a href='https://github.com/DEVAIEXP/gradio_component_dropdownplus'>Component GitHub Code</a></span></p>
 
-Advanced Dropdown Component for Gradio UI
+# `gradio_dropdownplus`
+<img alt="Static Badge" src="https://img.shields.io/badge/version%20-%200.0.220-%20blue"> <a href="https://huggingface.co/spaces/elismasilva/gradio_dropdownplus"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Demo-blue"></a><p><span>💻 <a href='https://github.com/DEVAIEXP/gradio_component_dropdownplus'>Component GitHub Code</a></span></p>
+
+
+Advanced Dropdown Component for Gradio UI with tooltip help support.
+
+## Installation
 
 ## Installation
 
@@ -56,7 +60,7 @@ with gr.Blocks(theme=gr.themes.Ocean(), title="DropdownPlus Demo") as demo:
         """
     )
 
-    with gr.Row():
+    with gr.Row():           
         with gr.Column(scale=2):
             gr.Markdown("### Interactive Examples")
             
@@ -65,6 +69,16 @@ with gr.Blocks(theme=gr.themes.Ocean(), title="DropdownPlus Demo") as demo:
                 choices=MODEL_CHOICES,
                 label="Select a Model",
                 help="This is a tooltip. It appears next to the label and provides brief guidance.",
+                interactive=True
+            )
+            # --- Example 3: Multi-select to show it works there too ---
+            dropdown_multi = DropdownPlus(
+                choices=FEATURE_CHOICES,
+                label="Select Multiple Features",
+                info="Help and info also work with multiselect.",
+                help="Select one or more options.",
+                multiselect=True,
+                value=["Feature A", "Feature C"], # Default value
                 interactive=True
             )
             
@@ -77,16 +91,7 @@ with gr.Blocks(theme=gr.themes.Ocean(), title="DropdownPlus Demo") as demo:
                 interactive=True
             )
 
-            # --- Example 3: Multi-select to show it works there too ---
-            dropdown_multi = DropdownPlus(
-                choices=FEATURE_CHOICES,
-                label="Select Multiple Features",
-                info="Help and info also work with multiselect.",
-                help="Select one or more options.",
-                multiselect=True,
-                value=["Feature A", "Feature C"], # Default value
-                interactive=True
-            )
+            
             
         with gr.Column(scale=1):
             gr.Markdown("### Output")
@@ -170,7 +175,7 @@ str
 ```
 
 </td>
-<td align="left"><code>value = <gradio_dropdownplus.dropdownplus.DefaultValue object at 0x0000027C72C27490></code></td>
+<td align="left"><code>value = <gradio_dropdownplus.dropdownplus.DefaultValue object at 0x00000170A604EDD0></code></td>
 <td align="left">the value selected in dropdown. If `multiselect` is true, this should be list, otherwise a single string or number from among `choices`. By default, the first choice in `choices` is initally selected. If set explicitly to None, no value is initally selected. If a function is provided, the function will be called each time the app loads to set the initial value of this component.</td>
 </tr>
 

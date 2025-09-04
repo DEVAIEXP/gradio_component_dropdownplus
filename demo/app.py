@@ -31,7 +31,7 @@ with gr.Blocks(theme=gr.themes.Ocean(), title="DropdownPlus Demo") as demo:
         """
     )
 
-    with gr.Row():
+    with gr.Row():           
         with gr.Column(scale=2):
             gr.Markdown("### Interactive Examples")
             
@@ -40,6 +40,16 @@ with gr.Blocks(theme=gr.themes.Ocean(), title="DropdownPlus Demo") as demo:
                 choices=MODEL_CHOICES,
                 label="Select a Model",
                 help="This is a tooltip. It appears next to the label and provides brief guidance.",
+                interactive=True
+            )
+            # --- Example 3: Multi-select to show it works there too ---
+            dropdown_multi = DropdownPlus(
+                choices=FEATURE_CHOICES,
+                label="Select Multiple Features",
+                info="Help and info also work with multiselect.",
+                help="Select one or more options.",
+                multiselect=True,
+                value=["Feature A", "Feature C"], # Default value
                 interactive=True
             )
             
@@ -52,16 +62,7 @@ with gr.Blocks(theme=gr.themes.Ocean(), title="DropdownPlus Demo") as demo:
                 interactive=True
             )
 
-            # --- Example 3: Multi-select to show it works there too ---
-            dropdown_multi = DropdownPlus(
-                choices=FEATURE_CHOICES,
-                label="Select Multiple Features",
-                info="Help and info also work with multiselect.",
-                help="Select one or more options.",
-                multiselect=True,
-                value=["Feature A", "Feature C"], # Default value
-                interactive=True
-            )
+            
             
         with gr.Column(scale=1):
             gr.Markdown("### Output")

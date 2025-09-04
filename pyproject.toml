@@ -8,7 +8,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "gradio_dropdownplus"
-version = "0.0.2"
+version = "0.0.3"
 description = "Advanced Dropdown Component for Gradio UI"
 readme = "README.md"
 license = "apache-2.0"
